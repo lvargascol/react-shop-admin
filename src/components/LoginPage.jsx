@@ -1,13 +1,27 @@
-import { useRef } from 'react';
+import { useRef, useState } from 'react';
 import { LockClosedIcon } from '@heroicons/react/24/solid';
+import { useAuth } from '@hooks/useAuth';
 
 export default function LoginPage() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
+  const auth = useAuth(null);
+  const [loginStatus, setLoginStatus] = useState(null); // Prueba
   const submitHandler = (event) => {
     event.preventDefault();
     const email = emailRef.current.value;
     const password = passwordRef.current.value;
+    auth
+      .signIn(email, password)
+      .then((response) => {
+        console.log('login successful');
+        setLoginStatus(201);
+      })
+      .catch((err) => {
+        if (err.response?.status === 401) {
+          setLoginStatus(err.response?.status);
+        }
+      });
   };
   return (
     <>
@@ -51,6 +65,12 @@ export default function LoginPage() {
                 />
               </div>
             </div>
+
+            {loginStatus === 401 && (
+              <div class="p-3 mb-3 text-sm text-red-700 bg-red-100 rounded-lg dark:bg-red-200 dark:text-red-800" role="alert">
+                <span class="font-medium">Incorrect email or password</span>
+              </div>
+            )}
 
             <div className="flex items-center justify-between">
               <div className="flex items-center">
