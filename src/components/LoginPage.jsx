@@ -1,4 +1,5 @@
 import { useRef, useState } from 'react';
+import { useRouter } from 'next/router';
 import { LockClosedIcon } from '@heroicons/react/24/solid';
 import { useAuth } from '@hooks/useAuth';
 
@@ -6,7 +7,8 @@ export default function LoginPage() {
   const emailRef = useRef(null);
   const passwordRef = useRef(null);
   const auth = useAuth(null);
-  const [loginStatus, setLoginStatus] = useState(null); // Prueba
+  const [loginStatus, setLoginStatus] = useState(null);
+  const router = useRouter(null);
   const submitHandler = (event) => {
     event.preventDefault();
     const email = emailRef.current.value;
@@ -14,7 +16,7 @@ export default function LoginPage() {
     auth
       .signIn(email, password)
       .then((response) => {
-        console.log('login successful');
+        router.push('/dashboard');
         setLoginStatus(201);
       })
       .catch((err) => {
